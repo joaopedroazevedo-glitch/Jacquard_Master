@@ -5,6 +5,7 @@ import { LayoutGrid, Settings, RefreshCw, AlertCircle, Clock, User, Tag, Hash } 
 import { LoomDetailModal } from './components/LoomDetailModal';
 import { ArticleManager } from './components/ArticleManager';
 import { DashboardSummary } from './components/DashboardSummary';
+import { QuickStatusSummary } from './components/QuickStatusSummary';
 
 const App = () => {
   const [looms, setLooms] = useState<Loom[]>(INITIAL_LOOMS);
@@ -111,10 +112,10 @@ const App = () => {
       {/* Main Content */}
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         
-        {/* Dashboard Summary Chart */}
+        {/* Dashboard Summary Chart - At the top */}
         <DashboardSummary looms={looms} />
         
-        {/* Looms Grid */}
+        {/* Looms Grid - Middle */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {looms.map((loom) => {
              const timeRemaining = calculateTimeRemaining(loom);
@@ -194,6 +195,10 @@ const App = () => {
             );
           })}
         </div>
+
+        {/* Quick Status Summary - At the bottom */}
+        <QuickStatusSummary looms={looms} />
+
       </main>
 
       {/* Modals */}
