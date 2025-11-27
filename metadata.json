@@ -1,5 +1,5 @@
 {
   "name": "JacquardMaster Control",
-  "description": "Sistema de gestão de produção para tecelagem Jacquard. Controlo de estados, tempos previstos e gestão de artigos para 20 teares com assistência de IA.",
+  "description": "Sistema de gestão de produção para tecelagem Jacquard. Controlo de estados e monitorização de tempos em tempo real.",
   "requestFramePermissions": []
 }

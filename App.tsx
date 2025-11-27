@@ -5,10 +5,43 @@ import { LayoutGrid, RefreshCw, AlertCircle, Clock, User, Tag, Hash } from 'luci
 import { LoomDetailModal } from './components/LoomDetailModal';
 
 const App = () => {
-  const [looms, setLooms] = useState<Loom[]>(INITIAL_LOOMS);
+  // Initialize state from LocalStorage if available, otherwise use defaults
+  // Also recalculate progress immediately to account for time passed while closed
+  const [looms, setLooms] = useState<Loom[]>(() => {
+    try {
+      const saved = localStorage.getItem('jacquard_looms');
+      if (saved) {
+        const parsedLooms: Loom[] = JSON.parse(saved);
+        // Recalculate progress on load
+        return parsedLooms.map(loom => {
+          if (loom.status === LoomStatus.RUNNING && loom.startTime && loom.expectedEndTime) {
+            const start = new Date(loom.startTime).getTime();
+            const end = new Date(loom.expectedEndTime).getTime();
+            const now = new Date().getTime();
+            const total = end - start;
+            const elapsed = now - start;
+            let progress = Math.floor((elapsed / total) * 100);
+            if (progress > 100) progress = 100;
+            if (progress < 0) progress = 0;
+            return { ...loom, progress };
+          }
+          return loom;
+        });
+      }
+    } catch (e) {
+      console.error("Erro ao carregar dados locais:", e);
+    }
+    return INITIAL_LOOMS;
+  });
+
   // setArticles is unused without ArticleManager, so we omit it to avoid linter warnings
   const [articles] = useState<Article[]>(INITIAL_ARTICLES);
   const [selectedLoom, setSelectedLoom] = useState<Loom | null>(null);
+
+  // Persist looms to LocalStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('jacquard_looms', JSON.stringify(looms));
+  }, [looms]);
   
   // Timer to update progress bars every minute
   useEffect(() => {
