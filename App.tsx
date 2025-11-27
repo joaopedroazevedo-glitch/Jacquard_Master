@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { INITIAL_LOOMS, INITIAL_ARTICLES, STATUS_COLORS, STATUS_TEXT_COLORS } from './constants';
 import { Loom, Article, LoomStatus } from './types';
-import { LayoutGrid, Settings, RefreshCw, AlertCircle, Clock, User, Tag, Hash } from 'lucide-react';
+import { LayoutGrid, RefreshCw, AlertCircle, Clock, User, Tag, Hash } from 'lucide-react';
 import { LoomDetailModal } from './components/LoomDetailModal';
-import { ArticleManager } from './components/ArticleManager';
-import { DashboardSummary } from './components/DashboardSummary';
-import { QuickStatusSummary } from './components/QuickStatusSummary';
 
 const App = () => {
   const [looms, setLooms] = useState<Loom[]>(INITIAL_LOOMS);
-  const [articles, setArticles] = useState<Article[]>(INITIAL_ARTICLES);
+  // setArticles is unused without ArticleManager, so we omit it to avoid linter warnings
+  const [articles] = useState<Article[]>(INITIAL_ARTICLES);
   const [selectedLoom, setSelectedLoom] = useState<Loom | null>(null);
-  const [showArticleManager, setShowArticleManager] = useState(false);
   
   // Timer to update progress bars every minute
   useEffect(() => {
@@ -97,23 +94,12 @@ const App = () => {
                     Parados: {stoppedCount}
                 </span>
             </div>
-
-            <button 
-                onClick={() => setShowArticleManager(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition-colors border border-gray-200"
-            >
-                <Settings size={18} />
-                <span className="hidden sm:inline">Artigos</span>
-            </button>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-        
-        {/* Dashboard Summary Chart - At the top */}
-        <DashboardSummary looms={looms} />
         
         {/* Looms Grid - Middle */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -196,9 +182,6 @@ const App = () => {
           })}
         </div>
 
-        {/* Quick Status Summary - At the bottom */}
-        <QuickStatusSummary looms={looms} />
-
       </main>
 
       {/* Modals */}
@@ -208,14 +191,6 @@ const App = () => {
             articles={articles}
             onSave={handleLoomSave}
             onClose={() => setSelectedLoom(null)} 
-        />
-      )}
-
-      {showArticleManager && (
-        <ArticleManager 
-            articles={articles}
-            onUpdateArticles={setArticles}
-            onClose={() => setShowArticleManager(false)}
         />
       )}
     </div>
