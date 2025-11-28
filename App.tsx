@@ -15,6 +15,13 @@ const App = () => {
         const parsedLooms: Loom[] = JSON.parse(saved);
         // Recalculate progress on load
         return parsedLooms.map(loom => {
+          // Migration: Ensure articleName exists for older data
+          if (!loom.articleName && loom.articleId) {
+             const art = INITIAL_ARTICLES.find(a => a.id === loom.articleId);
+             if (art) loom.articleName = art.name;
+          }
+          if (!loom.articleName) loom.articleName = '';
+
           if (loom.status === LoomStatus.RUNNING && loom.startTime && loom.expectedEndTime) {
             const start = new Date(loom.startTime).getTime();
             const end = new Date(loom.expectedEndTime).getTime();
@@ -75,11 +82,6 @@ const App = () => {
   const handleLoomSave = (updatedLoom: Loom) => {
     setLooms(prev => prev.map(l => l.id === updatedLoom.id ? updatedLoom : l));
     setSelectedLoom(null);
-  };
-
-  const getArticleName = (id: string | null) => {
-    if (!id) return '---';
-    return articles.find(a => a.id === id)?.name || 'Artigo Desconhecido';
   };
 
   const calculateTimeRemaining = (loom: Loom) => {
@@ -174,7 +176,7 @@ const App = () => {
                         {/* Article Box */}
                         <div className="bg-indigo-50/50 p-2.5 rounded-lg border border-indigo-50">
                             <span className="text-[10px] uppercase text-indigo-400 font-bold mb-0.5 block">Artigo Atual</span>
-                            <span className="font-medium text-indigo-900 line-clamp-1">{getArticleName(loom.articleId)}</span>
+                            <span className="font-medium text-indigo-900 line-clamp-1">{loom.articleName || '---'}</span>
                         </div>
 
                         {/* Situation/Notes */}

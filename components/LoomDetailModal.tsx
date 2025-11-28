@@ -35,12 +35,18 @@ export const LoomDetailModal: React.FC<LoomDetailModalProps> = ({ loom, articles
     setFormData(prev => ({ ...prev, status }));
   };
 
-  const handleArticleChange = (articleId: string) => {
-    const article = articles.find(a => a.id === articleId);
-    if (article) {
-        setFormData(prev => ({ ...prev, articleId: articleId }));
-        // Update input to article default (in Hours)
-        setCustomDuration((article.defaultTimeMinutes / 60).toFixed(1).replace('.0', ''));
+  const handleArticleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const matchedArticle = articles.find(a => a.name === value || a.code === value);
+    
+    setFormData(prev => ({
+        ...prev,
+        articleName: value,
+        articleId: matchedArticle ? matchedArticle.id : null
+    }));
+
+    if (matchedArticle) {
+        setCustomDuration((matchedArticle.defaultTimeMinutes / 60).toFixed(1).replace('.0', ''));
     }
   };
 
@@ -170,16 +176,18 @@ export const LoomDetailModal: React.FC<LoomDetailModalProps> = ({ loom, articles
                     
                     <div>
                         <label className="text-xs font-semibold text-gray-500 uppercase mb-1.5 block ml-1">Artigo</label>
-                        <select
-                            value={formData.articleId || ''}
-                            onChange={(e) => handleArticleChange(e.target.value)}
-                            className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-gray-800"
-                        >
-                            <option value="">Selecione um artigo...</option>
-                            {articles.map(a => (
-                                <option key={a.id} value={a.id}>{a.code} - {a.name}</option>
-                            ))}
-                        </select>
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <FileText size={18} className="text-gray-400" />
+                            </div>
+                            <input
+                                type="text"
+                                value={formData.articleName || ''}
+                                onChange={handleArticleNameChange}
+                                className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-gray-800"
+                                placeholder="Nome ou Código do Artigo"
+                            />
+                        </div>
                     </div>
 
                     {/* Manual override for duration - Always Visible now */}

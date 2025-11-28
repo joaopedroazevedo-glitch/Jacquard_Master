@@ -20,7 +20,8 @@ export interface Loom {
   status: LoomStatus;
   clientId: string;
   clientName: string;
-  articleId: string | null; // Referência ao artigo
+  articleId: string | null; // Referência ao artigo (opcional)
+  articleName?: string; // Nome do artigo (texto livre)
   internalOrderNumber: string; // Nº Interno
   startTime: string | null; // ISO Date string
   expectedEndTime: string | null; // ISO Date string

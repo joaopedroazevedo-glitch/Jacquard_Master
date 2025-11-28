@@ -20,6 +20,9 @@ const generateLooms = (): Loom[] => {
     let progress = 0;
     let plannedDuration = 120; // Default
 
+    let articleId = null;
+    let articleName = '';
+
     if (status === LoomStatus.RUNNING) {
         const now = new Date();
         const duration = 120 + Math.floor(Math.random() * 100);
@@ -29,6 +32,11 @@ const generateLooms = (): Loom[] => {
         start = new Date(now.getTime() - elapsed * 60000).toISOString();
         end = new Date(now.getTime() + (duration - elapsed) * 60000).toISOString();
         progress = Math.floor((elapsed / duration) * 100);
+
+        // Assign article
+        const art = INITIAL_ARTICLES[Math.floor(Math.random() * INITIAL_ARTICLES.length)];
+        articleId = art.id;
+        articleName = art.name;
     }
 
     looms.push({
@@ -37,7 +45,8 @@ const generateLooms = (): Loom[] => {
       status: status,
       clientId: status === LoomStatus.RUNNING ? `Cliente ${String.fromCharCode(65 + Math.floor(Math.random() * 5))}` : '',
       clientName: status === LoomStatus.RUNNING ? `Têxteis ${String.fromCharCode(65 + Math.floor(Math.random() * 5))} Ltda` : '',
-      articleId: status === LoomStatus.RUNNING ? INITIAL_ARTICLES[Math.floor(Math.random() * INITIAL_ARTICLES.length)].id : null,
+      articleId: articleId,
+      articleName: articleName,
       internalOrderNumber: status === LoomStatus.RUNNING ? `OF-${202400 + i}` : '',
       startTime: start,
       expectedEndTime: end,
