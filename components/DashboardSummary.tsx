@@ -60,7 +60,7 @@ export const DashboardSummary: React.FC<DashboardSummaryProps> = ({ looms }) => 
   const gradientString = `conic-gradient(${segments.join(', ')})`;
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mt-8">
       <div className="flex items-center gap-2 mb-6">
         <BarChart3 className="text-gray-700" size={20} />
         <h2 className="text-lg font-bold text-gray-800">Distribuição</h2>

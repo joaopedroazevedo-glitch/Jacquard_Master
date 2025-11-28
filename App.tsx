@@ -3,6 +3,7 @@ import { INITIAL_LOOMS, INITIAL_ARTICLES, STATUS_COLORS, STATUS_TEXT_COLORS } fr
 import { Loom, Article, LoomStatus } from './types';
 import { LayoutGrid, RefreshCw, AlertCircle, Clock, User, Tag, Hash } from 'lucide-react';
 import { LoomDetailModal } from './components/LoomDetailModal';
+import { DashboardSummary } from './components/DashboardSummary';
 
 const App = () => {
   // Initialize state from LocalStorage if available, otherwise use defaults
@@ -214,6 +215,9 @@ const App = () => {
             );
           })}
         </div>
+
+        {/* Dashboard Summary - Bottom */}
+        <DashboardSummary looms={looms} />
 
       </main>
 
